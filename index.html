@@ -30,6 +30,8 @@
 	  var map2;
 	  var JsonCounties;
 	  var markerArrays = new Array();
+	  var cev=0;
+	  var zev=0;
       function initialize() {
         var mapOptions = {
           zoom: 4,
@@ -46,6 +48,49 @@
 	    google.maps.event.addListener(map2,'click',function(event) {
            findCounty(event.latLng.lat(), event.latLng.lng())
     	});
+
+    	google.maps.event.addListener(map, 'center_changed', function() {
+    		if(cev==0){
+    			cev++;   	//Semaphores to avoid infinity recursion on changes
+   				map2.setCenter(map.getCenter());
+   				
+   			}else{
+   				cev--;
+   			}	
+  		});
+  		google.maps.event.addListener(map2, 'center_changed', function() {
+   			if(cev==0){
+   					cev++;
+   				map.setCenter(map2.getCenter());
+
+   			
+   			}else{
+   				cev--;
+   			}
+  		});
+  		google.maps.event.addListener(map, 'zoom_changed', function() {
+
+    		if(zev==0){
+    			zev++;
+   				map2.setZoom(map.getZoom());
+   				cev++;
+   				map2.setCenter(map.getCenter());
+   				
+   			}else{
+   				zev--;
+   			}	
+  		});
+  		google.maps.event.addListener(map2, 'zoom_changed', function() {
+   			if(zev==0){
+   				zev++;
+   				map.setZoom(map2.getZoom());
+   				cev++;
+   				map.setCenter(map2.getCenter());
+   			
+   			}else{
+   				zev--;
+   			}
+  		});
 		AddStates();		
 		loadCounty();
       }
