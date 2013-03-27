@@ -10,8 +10,7 @@
   #leftcolumn{margin-left:200px;float:left}
   #rightcolumn{margin-right:180px;float:right}
   #selectcountty{margin-left:50px;float:left}
-  .post
-{
+  .post{
     float: left;
     margin-left: 10px;
 }
@@ -82,7 +81,7 @@
 		}
 	  }
 	  
-	    function ajaxLoad(url,callback,plain) {
+	 /**   function ajaxLoad(url,callback,plain) {
 			var http_request = false;
 			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 				http_request = new XMLHttpRequest();
@@ -115,7 +114,7 @@
 			http_request.open('GET', url, true);
 			http_request.send(null);
 	    }
-		
+		**/
 		function makePolygon(processedData,temp_color,input_map){
 		  var first_lat=processedData[1];
 		  var first_lng=processedData[0];
@@ -186,9 +185,9 @@
 		}
 	  
 	  
-	  function processAjaxResult(request) {
+	  function processAjaxResult(data) {
 		//alert(request.responseText); //<---- your data is now here!
-		var results = JSON.parse(request.responseText);
+		var results = data;
 		var result_length=results.features.length;
 		//alert(results.features[5].geometry.coordinates);
 		var county_list=document.getElementById("CountyList");
@@ -319,8 +318,15 @@
 		{
 		  markerArrays.pop().setMap(null);
 		}
-		  ajaxLoad('tl_2010_us_county10.json',processAjaxResult, true);
-		  //document.getElementById("demo").innerHTML=result_length;
+		  $.ajax({
+		  	type: "GET",
+		  	url: "tl_2010_us_county10.json",
+		  	dataType: "json",
+		  	success: function (data){
+		  		var d=data;
+		  		processAjaxResult(d);
+		  	}
+		  });
 	  }
 	</script>
   </head>
