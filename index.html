@@ -38,10 +38,67 @@
         };
         map = new google.maps.Map(document.getElementById('map_canvas'),
               mapOptions);
+        google.maps.event.addListener(map,'click',function(event) {
+           findCounty(event.latLng.lat(), event.latLng.lng())
+    	});
 	    map2 = new google.maps.Map(document.getElementById('map_canvas2'),
 	          mapOptions);
+	    google.maps.event.addListener(map2,'click',function(event) {
+           findCounty(event.latLng.lat(), event.latLng.lng())
+    	});
 		AddStates();		
 		loadCounty();
+      }
+      function findCounty(lat,lng){
+      	var lat=lat;
+      	var lng=lng;
+      	console.log(lat+","+lng);
+      	$.ajax(
+      		{
+      		type:"GET",
+      		url:"http://maps.googleapis.com/maps/api/geocode/json?language=en&latlng="+lat+","+lng+"&sensor=false",
+      		dataType:"json",
+      		success:function(data){
+      			var x=data;
+      			var state;
+      			var county;
+      			$.each(x.results,function(idx,val){
+      				$.each(val.address_components,function(id,val2){
+      					$.each(val2.types,function(i,type){
+							if(type=="administrative_area_level_2"){
+								county=val2.short_name;
+							}
+      						if(type=="administrative_area_level_1"){
+								state=val2.short_name;
+							}
+      					});
+      				});
+      			});
+      			var sid;
+      			var snames=state_name_id;
+      			$.each(snames,function(id,st){
+      				if(st.Abbr==state){
+      					sid=st.id;
+      				}
+      			});
+      			console.log(county+","+state)
+      			$("#StateList").val(sid);
+      			loadCounty();
+      			var cid;
+      			var cnames=county_info;
+      			$.each(cnames,function(id,ct){
+      				if(ct.state==sid){
+	      				if(ct.name==county){
+	      					cid=ct.index;
+	      					console.log(ct.name+","+cid);
+	      				}
+      				}
+      			});
+      			$("#CountyList").val(cid);
+      			displayData();
+      		}
+      	});
+      		
       }
 	  
 	  function AddStates(){
@@ -190,7 +247,7 @@
 		var results = data;
 		var result_length=results.features.length;
 		//alert(results.features[5].geometry.coordinates);
-		var county_list=$("#CountyList");
+		var county_list=document.getElementById("CountyList");
 	    var county_id=county_list.options[county_list.selectedIndex].value;
 		
 		//get the flows for real od

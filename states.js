@@ -1,6 +1,6 @@
 var state_name_id=new  Array();
 state_name_id[0] = {Abbr:"AL",id:1};
-state_name_id[1] = {Abbr:"Ak",id:2};
+state_name_id[1] = {Abbr:"AK",id:2};
 state_name_id[2] = {Abbr:"AZ",id:4};
 state_name_id[3] = {Abbr:"AR",id:5};
 state_name_id[4] = {Abbr:"CA",id:6};
