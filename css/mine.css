@@ -1,0 +1,13 @@
+#map_canvas,#map_canvas2 { 
+   width:100%;
+   height:400px;
+}
+#map_canvas2 img { max-width:none; }
+
+#display,.display {
+  padding: 10px;
+  background-color: #036;
+  color: white;
+  text-align: center;
+  font-family: sans-serif;
+}
